@@ -2,6 +2,7 @@
 
 import json
 import yaml
+import argparse
 
 # TODO: Make configurable
 channel_map = {
@@ -53,10 +54,11 @@ def parse(filt):
     with open(filt, 'r') as f:
         j = json.load(f)
 
-    
     filters = j['mso_filters']
     print(yaml.dump(convert_filters(filters)))
     pipeline = []
+
+    # TODO: Sort filters. Want attenuation first, and boost at the end
     for k, v in channel_map.items():
         f = {}
         f['type'] = 'Filter'
