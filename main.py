@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
+import argparse
 import json
 import yaml
-import argparse
 
 # TODO: Make configurable
 channel_map = {
@@ -55,7 +55,7 @@ def parse(filt):
         j = json.load(f)
 
     filters = j['mso_filters']
-    print(yaml.dump(convert_filters(filters)))
+
     pipeline = []
 
     # TODO: Sort filters. Want attenuation first, and boost at the end
@@ -65,11 +65,25 @@ def parse(filt):
         f['channel'] = v
         f['names'] = [x['ref_desig'] for x in filters if k in x['chans']]
         pipeline.append(f)
-    print(yaml.dump(pipeline))
+
+    return {
+        "filters": convert_filters(filters),
+        "pipeline": pipeline,
+    }
 
 def main():
-    #parse("/home/a/filt.json")
-    parse("/home/a/0505.json")
+    parser = argparse.ArgumentParser(description="mso2camilladsp")
+    parser.add_argument('jriver_json')
+    parser.add_argument("--json", action="store_true", help="Output in json instead of yaml")
+    args = parser.parse_args()
+
+    x = parse(args.jriver_json)
+    if args.json:
+        s = json.dumps(x, indent=4)
+    else:
+        s = yaml.dump(x)
+
+    print(s)
 
 if __name__ == '__main__':
     main()
