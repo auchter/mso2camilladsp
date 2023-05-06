@@ -3,7 +3,10 @@
 import json
 import yaml
 
+# TODO: Make configurable
 channel_map = {
+        'L': 0,
+        'R': 1,
         'SL': 2,
         'SR': 3,
 }
@@ -38,7 +41,7 @@ def convert_filters(filters):
                 }
             }
 
-        assert(False, f"unknown filter type: {t}")
+        assert False, f"unknown filter type: {t}"
 
     result = {}
     for f in filters:
