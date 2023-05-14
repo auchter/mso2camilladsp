@@ -50,15 +50,21 @@ def convert_filters(filters):
         result[name] = convert(f)
     return result
 
+def keyfunk(x):
+    if 'gain' in x:
+        return x['gain']
+    elif 'gain_val' in x:
+        return x['gain_val']
+    else:
+        return 1000.0;
+
 def parse(filt):
     with open(filt, 'r') as f:
         j = json.load(f)
 
-    filters = j['mso_filters']
+    filters = sorted(j['mso_filters'], key=keyfunk)
 
     pipeline = []
-
-    # TODO: Sort filters. Want attenuation first, and boost at the end
     for k, v in channel_map.items():
         f = {}
         f['type'] = 'Filter'
